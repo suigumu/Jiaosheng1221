@@ -55,12 +55,13 @@ public class PlusView extends LinearLayout {
                     if(count > 1){
                         mCount = count-1;
                         editText.setText(mCount+"");
-                        Toast.makeText(context, "不能为1", Toast.LENGTH_SHORT).show();
                         if(listener != null){
                             listener.click(mCount);
                         }
-                    }
+                    }else{
+                        Toast.makeText(context, "不能小于一", Toast.LENGTH_SHORT).show();
 
+                    }
 
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
