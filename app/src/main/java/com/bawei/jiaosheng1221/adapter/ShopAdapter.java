@@ -8,9 +8,13 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bawei.jiaosheng1221.R;
+import com.bawei.jiaosheng1221.bean.DeleteBean;
 import com.bawei.jiaosheng1221.bean.ShopBean;
+import com.bawei.jiaosheng1221.present.DeleteCartPresenter;
+import com.bawei.jiaosheng1221.view.DeleteCartViewCallBack;
 import com.bawei.jiaosheng1221.view.PlusView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -29,13 +33,14 @@ import butterknife.ButterKnife;
  */
 
 
-public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.IViewHolder> {
+public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.IViewHolder> implements DeleteCartViewCallBack{
 
     private Context context;
 
     private List<ShopBean.DataBean.ListBean> list;
     // 存放 商家的id 和 商家名称
     private Map<String,String> map = new HashMap<>();
+    DeleteCartPresenter deleteCartPresenter = new DeleteCartPresenter(this);
 
     public ShopAdapter(Context context) {
         this.context = context;
@@ -194,7 +199,11 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.IViewHolder> {
         holder.item_del.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //mvp操作 删除的接口,传pid
+                int pid1 = list.get(position).getPid();
+                String pid = String.valueOf(pid1);
 
+                deleteCartPresenter.delete(pid);
                 list.remove(position);
 
                 setFirst(list);
@@ -260,6 +269,17 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.IViewHolder> {
         notifyDataSetChanged();
 
         sum(list);
+
+    }
+
+    @Override
+    public void success(DeleteBean deleteBean) {
+        Toast.makeText(context,deleteBean.getMsg(),Toast.LENGTH_LONG).show();
+
+    }
+
+    @Override
+    public void failure() {
 
     }
 
